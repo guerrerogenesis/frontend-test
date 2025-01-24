@@ -1,4 +1,3 @@
-import { useState } from "react";
 const UpdateProductsModal = ({
   isOpen,
   toggleModal,
@@ -16,8 +15,8 @@ const UpdateProductsModal = ({
   };
   const handleUpdate = (e) => {
     e.preventDefault();
-    updateProduct(productSelected, formData); // Llama a la función del padre para agregar el producto
-    setFormData({ name: "" }); // Limpia el formulario
+    updateProduct(productSelected, formData); 
+    setFormData({ stock: "" }); 
   };
   return (
     <>
@@ -56,4 +55,4 @@ const UpdateProductsModal = ({
   );
 };
 
-export { UpdateProductsModal };
+export default UpdateProductsModal;

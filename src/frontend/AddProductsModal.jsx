@@ -26,8 +26,8 @@ const AddProductsModal = ({
       return alert("Cambia la categoría");
     }
     console.log(formData);
-    createProducts(formData); // Llama a la función del padre para agregar el producto
-    setFormData({ name: "", stock: "", category_id: 0 }); // Limpia el formulario
+    createProducts(formData); 
+    setFormData({ name: "", stock: "", category_id: 0 });
   };
   return (
     <>
@@ -99,4 +99,4 @@ const AddProductsModal = ({
   );
 };
 
-export { AddProductsModal };
+export default AddProductsModal;

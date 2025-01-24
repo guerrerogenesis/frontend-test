@@ -14,8 +14,8 @@ const AddCategoryModal = ({ isOpen, toggleModal, createCategory }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createCategory(formData); // Llama a la función del padre para agregar el producto
-    setFormData({ name: "" }); // Limpia el formulario
+    createCategory(formData); 
+    setFormData({ name: "" });
   };
   return (
     <>
@@ -55,4 +55,4 @@ const AddCategoryModal = ({ isOpen, toggleModal, createCategory }) => {
   );
 };
 
-export { AddCategoryModal };
+export default AddCategoryModal;

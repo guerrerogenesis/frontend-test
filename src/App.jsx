@@ -1,10 +1,12 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import ProductsListing from "./frontend/ProductsListing";
-import { AddProductsModal } from "./frontend/AddProductsModal";
-import { UpdateProductsModal } from "./frontend/UpdateProductsModal";
-import { AddCategoryModal } from "./frontend/AddCategoryModal";
+import AddProductsModal from "./frontend/AddProductsModal";
+import UpdateProductsModal from "./frontend/UpdateProductsModal";
+import AddCategoryModal from "./frontend/AddCategoryModal";
 import { apiUrl } from "./lib/config";
+
+
 function App() {
   //estados y comportamiento de modales
   const [isCreateProductsModalOpen, setIsCreateProductsModalOpen] =
@@ -14,6 +16,10 @@ function App() {
     useState(false);
   const [isCreateCategoryModalOpen, setIsCreateCategoryModalOpen] =
     useState(false);
+  const [productUpdateFormData, setProductUpdateFormData] = useState({
+    stock: "",
+  });
+  const [productSelected, setProductSelected] = useState({});
 
   const toggleCreateProductModal = () => {
     setIsCreateProductsModalOpen(!isCreateProductsModalOpen);
@@ -26,16 +32,8 @@ function App() {
   };
 
   //manejo de datos y llmadas al API
-
-
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
-  const [errorProducts, setErrorProducts] = useState(null);
-  const [productUpdateFormData, setProductUpdateFormData] = useState({
-    stock: "",
-  });
-  const [productSelected, setProductSelected] = useState({});
-
   const [categories, setCategories] = useState([]);
 
   const getProducts = async () => {
@@ -46,9 +44,9 @@ function App() {
         throw new Error("Error al obtener los Productos: ".response.json());
       }
       const data = await response.json();
-      setProducts(data); //asigna el objeto devuelto por el api al estado
+      setProducts(data); 
     } catch (err) {
-      setErrorProducts(err.message);
+      console.log(err.message);
     } finally {
       setLoadingProducts(false);
     }
@@ -62,14 +60,13 @@ function App() {
         throw new Error("Error al obtener las Categorías: ".response.json());
       }
       const data = await response.json();
-      setCategories(data); //asigna el objeto devuelto por el api al estado
+      setCategories(data);
     } catch (err) {
       console.log(err.message);
     }
   };
 
   const createProduct = async (newProduct) => {
-    console.log("product test", newProduct);
     let response;
     try {
       response = await fetch(apiUrl + "/products", {
@@ -79,8 +76,6 @@ function App() {
         },
         body: JSON.stringify(newProduct),
       });
-      console.log(response);
-
       if (response.ok && response.status == 201) {
         getProducts();
         toggleCreateProductModal();
@@ -91,9 +86,9 @@ function App() {
       }
     } catch (error) {
       console.log("ERROR ", error);
-      alert("Error al conectar con el servidor: ", error);
     }
   };
+  
   const updateProduct = async (product, newProduct) => {
     try {
       const response = await fetch(apiUrl + "/products/" + product.id, {
@@ -103,7 +98,6 @@ function App() {
         },
         body: JSON.stringify(newProduct),
       });
-      console.log(response);
 
       if (response.ok) {
         getProducts();
@@ -117,7 +111,6 @@ function App() {
       }
     } catch (error) {
       console.log("ERROR ", error);
-      alert("Error al conectar con el servidor: ", error);
     }
   };
 
@@ -140,14 +133,12 @@ function App() {
       }
     } catch (error) {
       console.log("ERROR ", error);
-
-      alert("Error al conectar con el servidor: ", error);
     }
   };
 
   const deleteProduct = async (product) => {
     try {
-      const response = await fetch(apiProductsUrl(product.id), {
+      const response = await fetch(apiUrl+"/products/"+product.id, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -162,18 +153,14 @@ function App() {
       }
     } catch (error) {
       console.log("ERROR ", error);
-      alert("Error al conectar con el servidor: ", error);
     }
   };
 
   useEffect(() => {
     getProducts();
-  }, []); //ejecutamos la funcion una vez fetch al renderizar la pagina
-  useEffect(() => {
     getCategories();
-  }, []);
-
-  errorProducts && <p>Error al cargar los productos: {errorProducts}</p>;
+  }, []); //ejecutamos la consulta fetch de productos y categorias al renderizar la página
+ 
   return (
     <main>
       <div className="header">
